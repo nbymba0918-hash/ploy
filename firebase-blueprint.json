@@ -1,0 +1,123 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile with role-based access control for hospital staff",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "email": { "type": "string" },
+        "name": { "type": "string" },
+        "role": { "type": "string", "enum": ["executive", "statistician", "accountant", "superadmin"] },
+        "roleTitle": { "type": "string" },
+        "department": { "type": "string" },
+        "phone": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["userId", "email", "name", "role", "roleTitle"]
+    },
+    "DebtorRight": {
+      "title": "DebtorRight",
+      "description": "One of the 52 medical debtor rights categories",
+      "type": "object",
+      "properties": {
+        "id": { "type": "number" },
+        "code": { "type": "string" },
+        "name": { "type": "string" },
+        "category": { "type": "string", "enum": ["gov", "external"] },
+        "fundGroup": { "type": "string" },
+        "broughtForward": { "type": "number" },
+        "newAmount": { "type": "number" },
+        "paidAmount": { "type": "number" },
+        "badDebtAmount": { "type": "number" },
+        "carriedForward": { "type": "number" },
+        "remarks": { "type": "string" },
+        "daysOverdue": { "type": "number" },
+        "lastUpdated": { "type": "string" }
+      },
+      "required": ["id", "code", "name", "category", "fundGroup", "broughtForward", "carriedForward"]
+    },
+    "MonthlyArchive": {
+      "title": "MonthlyArchive",
+      "description": "Monthly accounting snapshot of the 52 debtor rights",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "periodMonth": { "type": "string" },
+        "periodYearBe": { "type": "string" },
+        "accountingDate": { "type": "string" },
+        "savedAt": { "type": "string" },
+        "savedBy": { "type": "string" },
+        "savedByRole": { "type": "string" },
+        "totalBroughtForward": { "type": "number" },
+        "totalNewAmount": { "type": "number" },
+        "totalPaidAmount": { "type": "number" },
+        "totalBadDebtAmount": { "type": "number" },
+        "totalCarriedForward": { "type": "number" },
+        "collectionRate": { "type": "number" },
+        "remarks": { "type": "string" },
+        "status": { "type": "string" }
+      },
+      "required": ["id", "periodMonth", "periodYearBe", "totalCarriedForward", "savedAt"]
+    },
+    "NotificationLog": {
+      "title": "NotificationLog",
+      "description": "Log of SMS and Email notifications dispatched to executives",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "channel": { "type": "string", "enum": ["SMS", "EMAIL"] },
+        "recipientName": { "type": "string" },
+        "targetAddress": { "type": "string" },
+        "title": { "type": "string" },
+        "message": { "type": "string" },
+        "status": { "type": "string" }
+      },
+      "required": ["id", "timestamp", "channel", "recipientName", "targetAddress", "message"]
+    },
+    "ReportSignature": {
+      "title": "ReportSignature",
+      "description": "3-tier official signatures for Sangkhlaburi Hospital debtor reports",
+      "type": "object",
+      "properties": {
+        "reporterName": { "type": "string" },
+        "reporterTitle": { "type": "string" },
+        "reporterSigned": { "type": "boolean" },
+        "reporterSignedDate": { "type": "string" },
+        "checkerName": { "type": "string" },
+        "checkerTitle": { "type": "string" },
+        "checkerSigned": { "type": "boolean" },
+        "checkerSignedDate": { "type": "string" },
+        "approverName": { "type": "string" },
+        "approverTitle": { "type": "string" },
+        "approverSigned": { "type": "boolean" },
+        "approverSignedDate": { "type": "string" }
+      },
+      "required": ["reporterName", "checkerName", "approverName"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "entities.User" },
+      "description": "User profiles with role assignment"
+    },
+    "/debtorRights/{rightId}": {
+      "schema": { "$ref": "entities.DebtorRight" },
+      "description": "52 debtor rights live ledger balances"
+    },
+    "/monthlyArchives/{archiveId}": {
+      "schema": { "$ref": "entities.MonthlyArchive" },
+      "description": "Historical monthly archives of closed accounts"
+    },
+    "/notificationLogs/{logId}": {
+      "schema": { "$ref": "entities.NotificationLog" },
+      "description": "History of dispatched SMS and Email alerts"
+    },
+    "/settings/reportSignatures": {
+      "schema": { "$ref": "entities.ReportSignature" },
+      "description": "Current status of 3-tier report approvals"
+    }
+  }
+}
